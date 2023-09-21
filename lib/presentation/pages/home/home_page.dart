@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:note_app/presentation/navigation/navigation_provider.dart';
 import 'package:note_app/presentation/widgets/mobile_note_item.dart';
 import '../../../utils/constants.dart';
 import '../../navigation/nav_destination.dart';
@@ -31,6 +32,7 @@ final class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final noteState = ref.watch(notesProvider);
+    final bottomBarNotifier = ref.watch(bottomNavProvider.notifier);
 
     return SafeArea(
       child: Scaffold(
@@ -56,12 +58,19 @@ final class _HomePageState extends ConsumerState<HomePage> {
                     collapsedHeight: 70.0,
                     floating: true,
                     flexibleSpace: SearchAnchor(
+                      isFullScreen: false,
                       searchController: _searchController
                         ..addListener(() {
                           ref.watch(searchProvider.notifier).state =
                               _searchController.text;
                         }),
-                      isFullScreen: false,
+                      viewLeading: IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: () {
+                          bottomBarNotifier.state = true;
+                          context.pop();
+                        },
+                      ),
                       viewBuilder: (suggestions) => Consumer(
                         builder: (_, ref, __) =>
                             ref.watch(suggestionsProvider).whenOrNull(
@@ -134,9 +143,12 @@ final class _HomePageState extends ConsumerState<HomePage> {
                         data: (notes) => MobileNoteItem(
                           key: ObjectKey(notes[index]),
                           note: notes[index],
-                          onTap: () => context.go(
-                            '${NavDestination.home.path}/${notes[index].id}',
-                          ),
+                          onTap: () {
+                            bottomBarNotifier.state = false;
+                            context.go(
+                              '${NavDestination.home.path}/${notes[index].id}',
+                            );
+                          },
                         ),
                       ),
                       childCount:

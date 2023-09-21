@@ -24,7 +24,7 @@ final favoriteNotesProvider =
 );
 
 typedef FavoriteNotesRef = AutoDisposeStreamProviderRef<List<FavoriteNote>>;
-String _$swipeNoteHash() => r'f02f5f45e894e40569c36b241677d03dfbbfbb70';
+String _$swipeNoteHash() => r'9f041797b81396a026676b3a01d502a9af1b109c';
 
 /// Copied from Dart SDK
 class _SystemHash {

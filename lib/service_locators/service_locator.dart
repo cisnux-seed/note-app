@@ -11,23 +11,26 @@ import '../domain/repositories/note_repository.dart';
 
 part 'service_locator.g.dart';
 
-@riverpod
-Future<Box<NoteEntity>> noteBox(NoteBoxRef ref) async =>
-    await Hive.openBox<NoteEntity>(kNoteBox);
+@Riverpod(keepAlive: true)
+Future<Box<NoteEntity>> noteBox(NoteBoxRef ref) async {
+  final box = await Hive.openBox<NoteEntity>(kNoteBox);
+  ref.onDispose(() => Hive.close());
+  return box;
+}
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<LocalNoteSource> localNoteSource(LocalNoteSourceRef ref) async =>
     LocalNoteSourceImpl(
       noteBox: await ref.watch(noteBoxProvider.future),
     );
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<NoteRepository> noteRepository(NoteRepositoryRef ref) async =>
     NoteRepositoryImpl(
       localNoteSource: await ref.watch(localNoteSourceProvider.future),
     );
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<NoteUseCase> noteUseCase(NoteUseCaseRef ref) async => NoteInteractor(
       noteRepository: await ref.watch(noteRepositoryProvider.future),
     );

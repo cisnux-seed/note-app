@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:note_app/presentation/navigation/nav_destination.dart';
+import 'package:note_app/presentation/navigation/navigation_provider.dart';
 import 'package:note_app/utils/extensions.dart';
 import '../navigation/navigation_item.dart';
 
-final class AdaptiveNavigation extends StatelessWidget {
+final class AdaptiveNavigation extends ConsumerWidget {
   const AdaptiveNavigation({
     super.key,
     required this.child,
@@ -28,22 +30,28 @@ final class AdaptiveNavigation extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: child,
-        key: key,
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: _getIndex(context),
-          onDestinationSelected: (index) => _onNavTapped(index, context),
-          destinations: navigationItems
-              .map(
-                (navigationItem) => NavigationDestination(
-                  icon: Icon(navigationItem.icon),
-                  selectedIcon: Icon(navigationItem.selectedIcon),
-                  label: navigationItem.label,
-                  tooltip: navigationItem.label,
-                ),
-              )
-              .toList(),
-        ),
-      );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final shouldShowBottomBar = ref.watch(bottomNavProvider);
+
+    return Scaffold(
+      body: child,
+      key: key,
+      bottomNavigationBar: shouldShowBottomBar
+          ? NavigationBar(
+              selectedIndex: _getIndex(context),
+              onDestinationSelected: (index) => _onNavTapped(index, context),
+              destinations: navigationItems
+                  .map(
+                    (navigationItem) => NavigationDestination(
+                      icon: Icon(navigationItem.icon),
+                      selectedIcon: Icon(navigationItem.selectedIcon),
+                      label: navigationItem.label,
+                      tooltip: navigationItem.label,
+                    ),
+                  )
+                  .toList(),
+            )
+          : null,
+    );
+  }
 }

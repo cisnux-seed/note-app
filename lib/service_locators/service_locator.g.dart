@@ -8,11 +8,11 @@ part of 'service_locator.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$noteBoxHash() => r'a4ee2f8dbdf7b8fb8017fb5afabe913b05c464db';
+String _$noteBoxHash() => r'9f354c4da4c9dd2b9fcf399ff316daf13f6233e6';
 
 /// See also [noteBox].
 @ProviderFor(noteBox)
-final noteBoxProvider = AutoDisposeFutureProvider<Box<NoteEntity>>.internal(
+final noteBoxProvider = FutureProvider<Box<NoteEntity>>.internal(
   noteBox,
   name: r'noteBoxProvider',
   debugGetCreateSourceHash:
@@ -21,13 +21,12 @@ final noteBoxProvider = AutoDisposeFutureProvider<Box<NoteEntity>>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef NoteBoxRef = AutoDisposeFutureProviderRef<Box<NoteEntity>>;
-String _$localNoteSourceHash() => r'385e6ff34abe813b2d6a01247e10d2ad84372755';
+typedef NoteBoxRef = FutureProviderRef<Box<NoteEntity>>;
+String _$localNoteSourceHash() => r'bf3f7bae293d459be2163dde7ed5dcbd93930b22';
 
 /// See also [localNoteSource].
 @ProviderFor(localNoteSource)
-final localNoteSourceProvider =
-    AutoDisposeFutureProvider<LocalNoteSource>.internal(
+final localNoteSourceProvider = FutureProvider<LocalNoteSource>.internal(
   localNoteSource,
   name: r'localNoteSourceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -37,13 +36,12 @@ final localNoteSourceProvider =
   allTransitiveDependencies: null,
 );
 
-typedef LocalNoteSourceRef = AutoDisposeFutureProviderRef<LocalNoteSource>;
-String _$noteRepositoryHash() => r'aaba2739164bedb1ab45b3c5d0d0dad4412c6918';
+typedef LocalNoteSourceRef = FutureProviderRef<LocalNoteSource>;
+String _$noteRepositoryHash() => r'dcaaef97c10097c99dff09bc684de0449b6d90fa';
 
 /// See also [noteRepository].
 @ProviderFor(noteRepository)
-final noteRepositoryProvider =
-    AutoDisposeFutureProvider<NoteRepository>.internal(
+final noteRepositoryProvider = FutureProvider<NoteRepository>.internal(
   noteRepository,
   name: r'noteRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -53,12 +51,12 @@ final noteRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
-typedef NoteRepositoryRef = AutoDisposeFutureProviderRef<NoteRepository>;
-String _$noteUseCaseHash() => r'5b8e94ad755033b85003019189233a094b5949ab';
+typedef NoteRepositoryRef = FutureProviderRef<NoteRepository>;
+String _$noteUseCaseHash() => r'8553a8e7c01a0855402f663446697ff6d4a6fb03';
 
 /// See also [noteUseCase].
 @ProviderFor(noteUseCase)
-final noteUseCaseProvider = AutoDisposeFutureProvider<NoteUseCase>.internal(
+final noteUseCaseProvider = FutureProvider<NoteUseCase>.internal(
   noteUseCase,
   name: r'noteUseCaseProvider',
   debugGetCreateSourceHash:
@@ -67,6 +65,6 @@ final noteUseCaseProvider = AutoDisposeFutureProvider<NoteUseCase>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef NoteUseCaseRef = AutoDisposeFutureProviderRef<NoteUseCase>;
+typedef NoteUseCaseRef = FutureProviderRef<NoteUseCase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

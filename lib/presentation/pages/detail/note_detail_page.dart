@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:note_app/utils/extensions.dart';
+import '../../navigation/navigation_provider.dart';
 import 'note_detail_provider.dart';
 
 final class NoteDetailPage extends ConsumerStatefulWidget {
@@ -94,6 +95,8 @@ final class _NoteDetailPageState extends ConsumerState<NoteDetailPage> {
     final isReadModeActive = ref.watch(readModeProvider);
     final isFavoriteNote = ref.watch(favoriteNoteProvider);
     final favoriteNoteNotifier = ref.watch(favoriteNoteProvider.notifier);
+    final bottomBarNotifier = ref.watch(bottomNavProvider.notifier);
+
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0.0,
@@ -119,7 +122,10 @@ final class _NoteDetailPageState extends ConsumerState<NoteDetailPage> {
             Icons.arrow_back,
             color: Theme.of(context).colorScheme.onSurface,
           ),
-          onPressed: () => context.pop(),
+          onPressed: () {
+            bottomBarNotifier.state = true;
+            context.pop();
+          },
         ),
         actions: [
           IconButton(
