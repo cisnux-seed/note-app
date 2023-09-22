@@ -23,6 +23,13 @@ for instant reference.
 
 <img width="250" alt="image" src="Screenshot 2023-09-22 at 17.41.21.png"><img width="250" alt="image" src="Screenshot 2023-09-22 at 17.41.21-1.png">
 
+## Packages
+NoteApp is built using several powerful libraries and packages to provide a seamless and feature-rich note-taking experience and robust application:
+- [riverpod](https://pub.dev/packages/riverpod)
+- [hive](https://pub.dev/packages/hive)
+- [freezed](https://pub.dev/packages/freezed)
+- [flutter_launcher_icons](https://pub.dev/packages/flutter_launcher_icons)
+
 ## Installations
 To get started with NoteApp, follow these steps:
 
