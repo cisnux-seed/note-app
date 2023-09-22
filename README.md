@@ -14,11 +14,12 @@ NoteApp is designed to work effortlessly on your iOS and Android devices, as wel
 
 ### Search
 Effortlessly find the notes you're looking for with our robust search. Locate specific notes.
-<img width="200" alt="image" src="Screenshot 2023-09-22 at 17.39.43.png">
+<img width="300" alt="image" src="Screenshot 2023-09-22 at 17.39.43.png">
 
 ### Favorites
 Mark your most important or frequently accessed notes as favorites. Access them quickly from a dedicated favorites section for instant reference.
-<img width="200" alt="image" src="Screenshot 2023-09-22 at 17.41.21.png">
+<img width="300" alt="image" src="Screenshot 2023-09-22 at 17.41.21.png">
+<img width="300" alt="image" src="Screenshot 2023-09-22 at 17.41.21-1.png">
 
 ## Installations
 To get started with NoteApp, follow these steps:
