@@ -95,32 +95,30 @@ final class FavoritePage extends ConsumerWidget {
   }) =>
       favoriteNoteState.whenOrNull(
         data: (favoriteNotes) => favoriteNotes.isEmpty
-            ? ListView(
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Image(
-                        height: 150.0,
-                        width: 150.0,
-                        image: AssetImage(kEmptyFavorites),
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: 200.0,
-                        child: Text(
-                          '❤️ Add your favorite notes.\nHappy writing! 🌟',
-                          textAlign: TextAlign.center,
-                          style:
-                              Theme.of(context).textTheme.labelLarge?.copyWith(
-                                    color: Theme.of(context)
-                                        .adaptiveOnSurface(context),
-                                  ),
+            ? SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Image(
+                      height: 150.0,
+                      width: 150.0,
+                      image: AssetImage(kEmptyFavorites),
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: 200.0,
+                      child: Text(
+                        '❤️ Add your favorite notes.\nHappy writing! 🌟',
+                        textAlign: TextAlign.center,
+                        style:
+                        Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: Theme.of(context)
+                              .adaptiveOnSurface(context),
                         ),
-                      )
-                    ],
-                  ),
-                ],
+                      ),
+                    )
+                  ],
+                ),
               )
             : Padding(
                 padding: const EdgeInsets.only(
