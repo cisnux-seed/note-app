@@ -88,50 +88,44 @@ final class FavoritePage extends ConsumerWidget {
     required void Function(DismissDirection direction, FavoriteNote note)
         onDismissed,
   }) =>
-      SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            top: 16.0,
-            bottom: 0.0,
-          ),
-          child: favoriteNoteState.whenOrNull(
-                data: (favoriteNotes) => favoriteNotes.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Image(
-                              height: 150.0,
-                              width: 150.0,
-                              image: AssetImage(kEmptyFavorites),
-                            ),
-                            const SizedBox(
-                              height: 16.0,
-                            ),
-                            SizedBox(
-                              width: 200.0,
-                              child: Text(
-                                '❤️ Add your favorite notes.\nHappy writing! 🌟',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).platform ==
-                                        TargetPlatform.iOS
-                                    ? null
-                                    : Theme.of(context)
-                                        .textTheme
-                                        .labelLarge
-                                        ?.copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSurface,
-                                        ),
-                              ),
-                            )
-                          ],
+      favoriteNoteState.whenOrNull(
+            data: (favoriteNotes) => favoriteNotes.isEmpty
+                ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Image(
+                        height: 150.0,
+                        width: 150.0,
+                        image: AssetImage(kEmptyFavorites),
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: 200.0,
+                        child: Text(
+                          '❤️ Add your favorite notes.\nHappy writing! 🌟',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge
+                              ?.copyWith(
+                            color: Theme.of(context)
+                                .adaptiveOnSurface(context),
+                          ),
                         ),
                       )
-                    : ListView.separated(
+                    ],
+                  ),
+                )
+                : SafeArea(
+                  child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 16.0,
+                        right: 16.0,
+                        top: 16.0,
+                        bottom: 0.0,
+                      ),
+                      child: ListView.separated(
                         // swipe to remove from the favorites
                         itemBuilder: (context, index) => FavoriteCard(
                           title: favoriteNotes[index].title,
@@ -150,12 +144,10 @@ final class FavoritePage extends ConsumerWidget {
                         separatorBuilder: (context, index) => const Divider(),
                         itemCount: favoriteNotes.length,
                       ),
-              ) ??
-              Center(
-                child: Theme.of(context).platform == TargetPlatform.iOS
-                    ? const CupertinoActivityIndicator()
-                    : const CircularProgressIndicator(),
-              ),
-        ),
-      );
+                    ),
+                ),
+          ) ??
+          Center(
+            child: Theme.of(context).adaptiveCircularProgress(context),
+          );
 }

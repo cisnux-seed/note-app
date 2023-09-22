@@ -59,50 +59,81 @@ final class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  Widget _buildResponsiveSliverGrid(
+  Widget? _buildResponsiveSliverGrid(
     AsyncValue<List<AddedNote>> noteState,
     StateController<bool> navBarNotifier,
   ) =>
-      SliverLayoutBuilder(
-        builder: (context, constraints) {
-          final crossAxisExtent = switch (constraints.crossAxisExtent) {
-            >= 700 && <= 800 => 4,
-            >= 500 && <= 700 => 3,
-            >= 0 && <= 500 => 2,
-            _ => 5
-          };
-
-          return SliverGrid(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: crossAxisExtent,
-              mainAxisSpacing: 2.0,
-              crossAxisSpacing: 2.0,
-            ),
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => noteState.whenOrNull(
-                skipError: true,
-                skipLoadingOnRefresh: true,
-                skipLoadingOnReload: true,
-                data: (notes) => NoteCard(
-                  key: ObjectKey(notes[index]),
-                  note: notes[index],
-                  onTap: () {
-                    navBarNotifier.state = false;
-                    context.go(
-                      '${NavDestination.home.path}/${notes[index].id}',
-                    );
-                  },
+      noteState.whenOrNull(
+        data: (notes) => notes.isEmpty
+            ? SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Image(
+                        height: 200.0,
+                        width: 200.0,
+                        image: AssetImage(kEmptyNotes),
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      SizedBox(
+                        width: 250.0,
+                        child: Text(
+                          '🖊️ Create a note and change your world, one word at a time. \nHappy writing! 🌟',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge
+                              ?.copyWith(
+                                color: Theme.of(context)
+                                    .adaptiveOnSurface(context),
+                              ),
+                        ),
+                      )
+                    ],
+                  ),
+                  childCount: 1,
                 ),
+              )
+            : SliverLayoutBuilder(
+                builder: (context, constraints) {
+                  final crossAxisExtent = switch (constraints.crossAxisExtent) {
+                    >= 700 && <= 800 => 4,
+                    >= 500 && <= 700 => 3,
+                    >= 0 && <= 500 => 2,
+                    _ => 5
+                  };
+                  return SliverGrid(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisExtent,
+                      mainAxisSpacing: 2.0,
+                      crossAxisSpacing: 2.0,
+                    ),
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) => NoteCard(
+                        key: ObjectKey(notes[index]),
+                        note: notes[index],
+                        onTap: () {
+                          navBarNotifier.state = false;
+                          context.go(
+                            '${NavDestination.home.path}/${notes[index].id}',
+                          );
+                        },
+                      ),
+                      childCount: notes.length,
+                    ),
+                  );
+                },
               ),
-              childCount:
-                  noteState.whenOrNull(data: (notes) => notes.length) ?? 0,
-            ),
-          );
-        },
       );
 
-  _buildSearchAnchor(StateController<bool> navBarNotifier,
-          StateController<String> searchNotifier) =>
+  _buildSearchAnchor(
+    StateController<bool> navBarNotifier,
+    StateController<String> searchNotifier,
+  ) =>
       SearchAnchor(
         isFullScreen: false,
         headerTextStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -207,43 +238,6 @@ final class _HomePageState extends ConsumerState<HomePage> {
                 sliver: _buildResponsiveSliverGrid(noteState, navBarNotifier),
               ),
             ],
-          ),
-          Center(
-            child: noteState.when(
-              data: (notes) => notes.isEmpty
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Image(
-                          height: 200.0,
-                          width: 200.0,
-                          image: AssetImage(kEmptyNotes),
-                        ),
-                        const SizedBox(
-                          height: 16.0,
-                        ),
-                        SizedBox(
-                          width: 250.0,
-                          child: Text(
-                            '🖊️ Create a note and change your world, one word at a time. \nHappy writing! 🌟',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(
-                                  color: Theme.of(context)
-                                      .adaptiveOnSurface(context),
-                                ),
-                          ),
-                        )
-                      ],
-                    )
-                  : null,
-              error: (_, __) =>
-                  Theme.of(context).adaptiveCircularProgress(context),
-              loading: () =>
-                  Theme.of(context).adaptiveCircularProgress(context),
-            ),
           ),
           if (Theme.of(context).platform == TargetPlatform.iOS)
             Padding(
