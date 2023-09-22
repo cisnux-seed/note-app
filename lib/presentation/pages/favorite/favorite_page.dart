@@ -96,28 +96,31 @@ final class FavoritePage extends ConsumerWidget {
       favoriteNoteState.whenOrNull(
         data: (favoriteNotes) => favoriteNotes.isEmpty
             ? SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Image(
-                      height: 150.0,
-                      width: 150.0,
-                      image: AssetImage(kEmptyFavorites),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: 200.0,
-                      child: Text(
-                        '❤️ Add your favorite notes.\nHappy writing! 🌟',
-                        textAlign: TextAlign.center,
-                        style:
-                        Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: Theme.of(context)
-                              .adaptiveOnSurface(context),
-                        ),
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Image(
+                        height: 150.0,
+                        width: 150.0,
+                        image: AssetImage(kEmptyFavorites),
                       ),
-                    )
-                  ],
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: 200.0,
+                        child: Text(
+                          '❤️ Add your favorite notes.\nHappy writing! 🌟',
+                          textAlign: TextAlign.center,
+                          style:
+                          Theme.of(context).textTheme.labelLarge?.copyWith(
+                            color: Theme.of(context)
+                                .adaptiveOnSurface(context),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               )
             : Padding(
