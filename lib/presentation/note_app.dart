@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:note_app/presentation/widgets/adaptive_navigation.dart';
@@ -13,20 +14,37 @@ final class NoteApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      title: 'Note App',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: kLightColorScheme,
-        textTheme: textTheme,
-      ),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        colorScheme: kDarkColorScheme,
-        textTheme: textTheme,
-      ),
-      routerConfig: GoRouter(
+    return Theme.of(context).platform == TargetPlatform.iOS
+        ? CupertinoApp.router(
+            debugShowCheckedModeBanner: false,
+            localizationsDelegates: const [
+              DefaultMaterialLocalizations.delegate,
+              DefaultWidgetsLocalizations.delegate,
+              DefaultCupertinoLocalizations.delegate,
+            ],
+            title: 'Note App',
+            routerConfig: routerConfig,
+          )
+        : MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            title: 'Note App',
+            theme: ThemeData(
+              useMaterial3: true,
+              colorScheme: kLightColorScheme,
+              textTheme: textTheme,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            darkTheme: ThemeData(
+              useMaterial3: true,
+              colorScheme: kDarkColorScheme,
+              textTheme: textTheme,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            routerConfig: routerConfig,
+          );
+  }
+
+  RouterConfig<Object>? get routerConfig => GoRouter(
         initialLocation: NavDestination.home.path,
         routes: [
           ShellRoute(
@@ -77,17 +95,17 @@ final class NoteApp extends StatelessWidget {
                       ),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) =>
-                          SlideTransition(
-                            position: animation.drive(
-                              Tween<Offset>(
-                                begin: const Offset(1.0, 0.0),
-                                end: Offset.zero,
-                              ).chain(
-                                CurveTween(curve: Curves.easeIn),
-                              ),
-                            ),
-                            child: child,
+                              SlideTransition(
+                        position: animation.drive(
+                          Tween<Offset>(
+                            begin: const Offset(1.0, 0.0),
+                            end: Offset.zero,
+                          ).chain(
+                            CurveTween(curve: Curves.easeIn),
                           ),
+                        ),
+                        child: child,
+                      ),
                     ),
                   ),
                 ],
@@ -95,7 +113,5 @@ final class NoteApp extends StatelessWidget {
             ],
           )
         ],
-      ),
-    );
-  }
+      );
 }

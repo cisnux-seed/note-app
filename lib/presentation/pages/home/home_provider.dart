@@ -8,7 +8,6 @@ import '../../../service_locators/service_locator.dart';
 part 'home_provider.g.dart';
 
 final searchProvider = StateProvider.autoDispose((_) => '');
-final navigationProvider = StateProvider.autoDispose((_) => 0);
 
 @riverpod
 Stream<List<String>> suggestions(SuggestionsRef ref) async* {

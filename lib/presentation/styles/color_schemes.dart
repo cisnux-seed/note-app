@@ -67,3 +67,4 @@ const kDarkColorScheme = ColorScheme(
   outlineVariant: Color(0xFF45464F),
   scrim: Color(0xFF000000),
 );
+

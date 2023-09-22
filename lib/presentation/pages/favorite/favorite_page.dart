@@ -1,9 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:note_app/presentation/pages/favorite/favorite_provider.dart';
+import 'package:note_app/presentation/widgets/favorite_card.dart';
 import 'package:note_app/utils/constants.dart';
+import 'package:note_app/utils/extensions.dart';
+import '../../../domain/models/favorite_note.dart';
 import '../../navigation/nav_destination.dart';
+import '../../navigation/navigation_provider.dart';
 
 final class FavoritePage extends ConsumerWidget {
   const FavoritePage({super.key});
@@ -11,15 +16,79 @@ final class FavoritePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final favoriteNoteState = ref.watch(favoriteNotesProvider);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Favorite Notes',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        centerTitle: true,
-      ),
-      body: SafeArea(
+    final navBarNotifier = ref.watch(navBarProvider.notifier);
+
+    return Theme.of(context).platform == TargetPlatform.iOS
+        ? CupertinoPageScaffold(
+            navigationBar: CupertinoNavigationBar(
+              middle: Text(
+                'Favorites',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Theme.of(context).adaptiveOnSurface(context),
+                    ),
+              ),
+            ),
+            child: _buildAdaptiveBody(
+              context,
+              favoriteNoteState,
+              navBarNotifier,
+              onDismissed: (_, favoriteNote) => ref.read(
+                swipeNoteProvider(
+                  favoriteNote: favoriteNote.copyWith(isFavorite: false),
+                ),
+              ),
+            ),
+          )
+        : Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'Favorites',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Theme.of(context).adaptiveOnSurface(context),
+                    ),
+              ),
+              centerTitle: true,
+            ),
+            body: _buildAdaptiveBody(
+              context,
+              favoriteNoteState,
+              navBarNotifier,
+              onDismissed: (_, favoriteNote) {
+                ref.read(
+                  swipeNoteProvider(
+                    favoriteNote: favoriteNote.copyWith(isFavorite: false),
+                  ),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.inverseSurface,
+                    action: SnackBarAction(
+                      label: 'Undo',
+                      onPressed: () => ref.read(
+                        swipeNoteProvider(
+                          favoriteNote: favoriteNote.copyWith(isFavorite: true),
+                        ),
+                      ),
+                    ),
+                    content: Text(
+                      'Successfully removed ${favoriteNote.title} from the favorites',
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+  }
+
+  Widget _buildAdaptiveBody(
+    BuildContext context,
+    AsyncValue<List<FavoriteNote>> favoriteNoteState,
+    StateController<bool> navBarNotifier, {
+    required void Function(DismissDirection direction, FavoriteNote note)
+        onDismissed,
+  }) =>
+      SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(
             left: 16.0,
@@ -46,14 +115,17 @@ final class FavoritePage extends ConsumerWidget {
                               child: Text(
                                 '❤️ Add your favorite notes.\nHappy writing! 🌟',
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelLarge
-                                    ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                    ),
+                                style: Theme.of(context).platform ==
+                                        TargetPlatform.iOS
+                                    ? null
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .labelLarge
+                                        ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                        ),
                               ),
                             )
                           ],
@@ -61,99 +133,29 @@ final class FavoritePage extends ConsumerWidget {
                       )
                     : ListView.separated(
                         // swipe to remove from the favorites
-                        itemBuilder: (context, index) => Dismissible(
-                          key: ObjectKey(favoriteNotes[index]),
-                          onDismissed: (_) {
-                            ref.read(
-                              swipeNoteProvider(
-                                favoriteNote: favoriteNotes[index]
-                                    .copyWith(isFavorite: false),
-                              ),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                backgroundColor: Theme.of(context)
-                                    .colorScheme
-                                    .inverseSurface,
-                                action: SnackBarAction(
-                                  label: 'Undo',
-                                  textColor: Theme.of(context).colorScheme.inversePrimary,
-                                  onPressed: () => ref.read(
-                                    swipeNoteProvider(
-                                      favoriteNote: favoriteNotes[index]
-                                          .copyWith(isFavorite: true),
-                                    ),
-                                  ),
-                                ),
-                                content: Text(
-                                  'Successfully removed ${favoriteNotes[index].title} from the favorites',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onInverseSurface,
-                                      ),
-                                ),
-                              ),
+                        itemBuilder: (context, index) => FavoriteCard(
+                          title: favoriteNotes[index].title,
+                          body: favoriteNotes[index].body,
+                          dismissibleKey: ObjectKey(favoriteNotes[index]),
+                          favoriteNote: favoriteNotes[index],
+                          onTap: () {
+                            navBarNotifier.state = false;
+                            context.go(
+                              '${NavDestination.favorite.path}/${favoriteNotes[index].id}',
                             );
                           },
-                          background: Container(
-                            color: Theme.of(context).colorScheme.surfaceTint,
-                          ),
-                          child: ListTile(
-                            key: ObjectKey(favoriteNotes[index]),
-                            onTap: () => context.go(
-                              '${NavDestination.favorite.path}/${favoriteNotes[index].id}',
-                            ),
-                            tileColor: Theme.of(context).colorScheme.surface,
-                            title: Text(
-                              favoriteNotes[index].title,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface,
-                                  ),
-                            ),
-                            subtitle: Text(
-                              favoriteNotes[index].title,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface,
-                                  ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            trailing: Text(
-                              favoriteNotes[index].lastUpdatedAt,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
-                                  ),
-                            ),
-                          ),
+                          onDismissed: (direction) =>
+                              onDismissed(direction, favoriteNotes[index]),
                         ),
                         separatorBuilder: (context, index) => const Divider(),
                         itemCount: favoriteNotes.length,
                       ),
               ) ??
-              const Center(
-                child: CircularProgressIndicator(),
+              Center(
+                child: Theme.of(context).platform == TargetPlatform.iOS
+                    ? const CupertinoActivityIndicator()
+                    : const CircularProgressIndicator(),
               ),
         ),
-      ),
-    );
-  }
+      );
 }
