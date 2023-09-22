@@ -65,37 +65,31 @@ final class _HomePageState extends ConsumerState<HomePage> {
   ) =>
       noteState.whenOrNull(
         data: (notes) => notes.isEmpty
-            ? SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Image(
-                        height: 200.0,
-                        width: 200.0,
-                        image: AssetImage(kEmptyNotes),
+            ? SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Image(
+                      height: 200.0,
+                      width: 200.0,
+                      image: AssetImage(kEmptyNotes),
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    SizedBox(
+                      width: 250.0,
+                      child: Text(
+                        '🖊️ Create a note and change your world, one word at a time. \nHappy writing! 🌟',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              color:
+                                  Theme.of(context).adaptiveOnSurface(context),
+                            ),
                       ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      SizedBox(
-                        width: 250.0,
-                        child: Text(
-                          '🖊️ Create a note and change your world, one word at a time. \nHappy writing! 🌟',
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelLarge
-                              ?.copyWith(
-                                color: Theme.of(context)
-                                    .adaptiveOnSurface(context),
-                              ),
-                        ),
-                      )
-                    ],
-                  ),
-                  childCount: 1,
+                    )
+                  ],
                 ),
               )
             : SliverLayoutBuilder(
