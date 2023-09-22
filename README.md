@@ -14,6 +14,7 @@ NoteApp is designed to work effortlessly on your iOS and Android devices, as wel
 
 ### Search
 Effortlessly find the notes you're looking for with our robust search. Locate specific notes.
+
 <img width="300" alt="image" src="Screenshot 2023-09-22 at 17.39.43.png">
 
 ### Favorites
