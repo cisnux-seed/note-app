@@ -17,7 +17,8 @@ Effortlessly find the notes you're looking for with our robust search. Locate sp
 <img width="300" alt="image" src="Screenshot 2023-09-22 at 17.39.43.png">
 
 ### Favorites
-Mark your most important or frequently accessed notes as favorites. Access them quickly from a dedicated favorites section for instant reference.
+Mark your most important or frequently accessed notes as favorites. Access them quickly from a dedicated favorites section 
+for instant reference.
 
 <img width="300" alt="image" src="Screenshot 2023-09-22 at 17.41.21.png">
 <img width="300" alt="image" src="Screenshot 2023-09-22 at 17.41.21-1.png">
